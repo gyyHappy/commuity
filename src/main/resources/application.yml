@@ -1,6 +1,5 @@
-#github.client.id: 14ce1bdacd596e4269ba
-#github.client.secret: 2e153f2c0d6ba746cd98830a12cd84b65bf7ef91
-#github.redirect.uri: http://localhost:8080/callback
+
+# GitHub 授权信息
 
 github:
   client:
@@ -8,3 +7,12 @@ github:
     secret: 2e153f2c0d6ba746cd98830a12cd84b65bf7ef91
   redirect:
     uri: http://localhost:8080/callback
+
+
+# h2 数据库
+spring:
+  datasource:
+    url: jdbc:h2:~/commuity
+    username: sa
+    password: 123
+    driver-class-name: org.h2.Driver
