@@ -3,6 +3,7 @@ package com.gyy.community.mapper;
 import com.gyy.community.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @author GYY
@@ -18,4 +19,10 @@ public interface UserMapper {
     @Insert("insert into user (account_id,name,token,gmt_create,gmt_modified) values (#{accountId},#{name},#{token},#{gmtCreate},#{gmtModified})")
     void insert(User user);
 
+    /**
+     * 通过token查询信息
+     * @param token token
+     */
+    @Select("select * from user where token = #{token}")
+    User selectByToken(String token);
 }
