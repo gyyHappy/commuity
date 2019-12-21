@@ -1,5 +1,5 @@
 
-# GitHub ÊÚÈ¨ĞÅÏ¢
+# GitHub æˆæƒä¿¡æ¯
 
 github:
   client:
@@ -9,10 +9,10 @@ github:
     uri: http://localhost:8080/callback
 
 
-# h2 Êı¾İ¿â
+# mysql æ•°æ®åº“
 spring:
   datasource:
-    url: jdbc:h2:~/commuity
-    username: sa
-    password: 123
-    driver-class-name: org.h2.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/coummity?serverTimezone=UTC
+    username: root
+    password: 123456

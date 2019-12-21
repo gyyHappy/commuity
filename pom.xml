@@ -63,11 +63,10 @@
             <version>1.2.62</version>
         </dependency>
 
-        <!--    h2    -->
+        <!--   mysql     -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
         <!--  mybatis      -->
@@ -75,12 +74,6 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.1</version>
-        </dependency>
-
-        <!-- jdbc  -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
     </dependencies>
