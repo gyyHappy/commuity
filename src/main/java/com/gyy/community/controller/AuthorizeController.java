@@ -56,7 +56,7 @@ public class AuthorizeController {
         //获取github用户信息
         GitHubUser gitHubUser = gitHubProvider.getUser(accessToken);
         //判断用户信息是否为空
-        if (gitHubUser != null) {
+        if (gitHubUser != null && gitHubUser.getId() != null) {
             //用户信息不为空，登录成功，重定向到首页
             User user = new User();
             user.setAccountId(String.valueOf(gitHubUser.getId()));
