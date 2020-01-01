@@ -55,15 +55,17 @@ public class PublishController {
         User user = null;
         //获取cookies
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (("token").equals(cookie.getName())){
-                String token = cookie.getValue();
-                //通过token查询数据库
-                user = userMapper.selectByToken(token);
-                if (user != null){
-                    request.getSession().setAttribute("user",user);
+        if (cookies != null && cookies.length != 0) {
+            for (Cookie cookie : cookies) {
+                if (("token").equals(cookie.getName())){
+                    String token = cookie.getValue();
+                    //通过token查询数据库
+                    user = userMapper.selectByToken(token);
+                    if (user != null){
+                        request.getSession().setAttribute("user",user);
+                    }
+                    break;
                 }
-                break;
             }
         }
         if (user == null) {

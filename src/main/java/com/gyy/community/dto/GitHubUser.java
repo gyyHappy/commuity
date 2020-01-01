@@ -22,4 +22,8 @@ public class GitHubUser {
      * 个性签名
      */
     private String bio;
+    /**
+     * Github 头像
+     */
+    private String avatar_url;
 }

@@ -6,12 +6,12 @@ import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.User;
 import com.gyy.community.provider.GitHubProvider;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Controller
 public class AuthorizeController {
 
-    @Autowired
+    @Resource
     private GitHubProvider gitHubProvider;
 
     @Value("${github.client.id}")
@@ -35,7 +35,7 @@ public class AuthorizeController {
     @Value("${github.redirect.uri}")
     private String uri;
 
-    @Autowired(required = false)
+    @Resource
     private UserMapper userMapper;
 
     /**
@@ -64,6 +64,7 @@ public class AuthorizeController {
             user.setToken(UUID.randomUUID().toString());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(gitHubUser.getAvatar_url());
             userMapper.insert(user);
             //添加cookie
             response.addCookie(new Cookie("token",user.getToken()));

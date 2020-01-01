@@ -2,10 +2,10 @@ package com.gyy.community.controller;
 
 import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class IndexController {
 
-    @Autowired(required = false)
+    @Resource
     private UserMapper userMapper;
 
     /**
@@ -28,15 +28,17 @@ public class IndexController {
     public String index(HttpServletRequest request){
         //获取cookies
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (("token").equals(cookie.getName())){
-                String token = cookie.getValue();
-                //通过token查询数据库
-                User user = userMapper.selectByToken(token);
-                if (user != null){
-                    request.getSession().setAttribute("user",user);
+        if (cookies != null && cookies.length != 0) {
+            for (Cookie cookie : cookies) {
+                if (("token").equals(cookie.getName())){
+                    String token = cookie.getValue();
+                    //通过token查询数据库
+                    User user = userMapper.selectByToken(token);
+                    if (user != null){
+                        request.getSession().setAttribute("user",user);
+                    }
+                    break;
                 }
-                break;
             }
         }
         return "index";
