@@ -64,7 +64,7 @@ public class AuthorizeController {
             user.setToken(UUID.randomUUID().toString());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            user.setAvatarUrl(gitHubUser.getAvatar_url());
+            user.setAvatarUrl(gitHubUser.getAvatarUrl());
             userMapper.insert(user);
             //添加cookie
             response.addCookie(new Cookie("token",user.getToken()));
@@ -85,10 +85,10 @@ public class AuthorizeController {
     @NotNull
     private AccessTokenDTO setAccessTokenDTO(@RequestParam(name = "code") String code, @RequestParam(name = "state") String state) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-        accessTokenDTO.setClient_id(clientId);
-        accessTokenDTO.setClient_secret(clientSecret);
+        accessTokenDTO.setClientId(clientId);
+        accessTokenDTO.setClientSecret(clientSecret);
         accessTokenDTO.setCode(code);
-        accessTokenDTO.setRedirect_uri(uri);
+        accessTokenDTO.setRedirectUri(uri);
         accessTokenDTO.setState(state);
         return accessTokenDTO;
     }

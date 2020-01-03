@@ -1,13 +1,14 @@
 package com.gyy.community.dto;
 
+import com.gyy.community.model.User;
 import lombok.Data;
 
 /**
- * 问题类
- * @author gyy
+ * @author GYY
+ * @date 2020/1/2 17:58
  */
 @Data
-public class Question {
+public class QuestionDTO {
 
     /**
      * id
@@ -50,4 +51,8 @@ public class Question {
      */
     private String tag;
 
+    /**
+     * github 用户信息
+     */
+    private User user;
 }

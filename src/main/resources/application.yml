@@ -1,10 +1,9 @@
 
 # GitHub 授权信息
-
 github:
   client:
     id: 14ce1bdacd596e4269ba
-    secret: 30fb52671490e80880ee6d7de6cdcc7c6215781c
+    secret: 991fba2b8c8955d047276a8072095553f5483637
   redirect:
     uri: http://localhost:8080/callback
 
@@ -16,3 +15,9 @@ spring:
     url: jdbc:mysql://localhost:3306/coummity?serverTimezone=UTC
     username: root
     password: 123456
+
+# mybatis
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+

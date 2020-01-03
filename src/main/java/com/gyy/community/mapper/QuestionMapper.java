@@ -1,8 +1,11 @@
 package com.gyy.community.mapper;
 
-import com.gyy.community.dto.Question;
+import com.gyy.community.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * @author GYY
@@ -17,4 +20,12 @@ public interface QuestionMapper {
      */
     @Insert("insert into question (title,description,gmt_create,gmt_modified,creator,comment_count,view_count,like_count,tag) values (#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{commentCount},#{viewCount},#{likeCount},#{tag})")
     void insert(Question question);
+
+
+    /**
+     * 查询问题列表
+     * @return Question
+     */
+    @Select("select * from question")
+    List<Question> list();
 }

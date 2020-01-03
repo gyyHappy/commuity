@@ -22,7 +22,16 @@ public interface UserMapper {
     /**
      * 通过token查询信息
      * @param token token
+     * @return User
      */
     @Select("select * from user where token = #{token}")
     User selectByToken(String token);
+
+    /**
+     * 通过id查询信息
+     * @param  id id
+     * @return user
+     */
+    @Select("select * from user where id = #{id}")
+    User selectById(Integer id);
 }

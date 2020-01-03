@@ -25,5 +25,5 @@ public class GitHubUser {
     /**
      * Github 头像
      */
-    private String avatar_url;
+    private String avatarUrl;
 }
