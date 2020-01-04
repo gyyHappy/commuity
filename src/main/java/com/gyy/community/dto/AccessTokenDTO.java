@@ -12,13 +12,13 @@ import lombok.Data;
 @Data
 public class AccessTokenDTO {
 
-    private String clientId;
+    private String client_id;
 
-    private String clientSecret;
+    private String client_secret;
 
     private String code;
 
-    private String redirectUri;
+    private String redirect_uri;
 
     private String state;
 }

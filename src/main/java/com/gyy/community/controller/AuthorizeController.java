@@ -85,10 +85,10 @@ public class AuthorizeController {
     @NotNull
     private AccessTokenDTO setAccessTokenDTO(@RequestParam(name = "code") String code, @RequestParam(name = "state") String state) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-        accessTokenDTO.setClientId(clientId);
-        accessTokenDTO.setClientSecret(clientSecret);
+        accessTokenDTO.setClient_id(clientId);
+        accessTokenDTO.setClient_secret(clientSecret);
         accessTokenDTO.setCode(code);
-        accessTokenDTO.setRedirectUri(uri);
+        accessTokenDTO.setRedirect_uri(uri);
         accessTokenDTO.setState(state);
         return accessTokenDTO;
     }
