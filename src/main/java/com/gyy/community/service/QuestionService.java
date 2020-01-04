@@ -1,5 +1,6 @@
 package com.gyy.community.service;
 
+import com.gyy.community.dto.PaginationDTO;
 import com.gyy.community.dto.QuestionDTO;
 import com.gyy.community.mapper.QuestionMapper;
 import com.gyy.community.mapper.UserMapper;
@@ -27,18 +28,40 @@ public class QuestionService {
 
     /**
      * 查询问题信息列表
+     *
+     * @param page
+     * @param size
      * @return 返回 QuestionDTO
      */
-    public List<QuestionDTO> list() {
-        List<Question> list = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+
+        //页面信息
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer count = questionMapper.count();
+        paginationDTO.set(page,size,count);
+
+        if (page < 1) {
+            page = 1;
+        }
+
+        if (page > paginationDTO.getTotalPage()) {
+            page = paginationDTO.getTotalPage();
+        }
+
+        // offset = size * (page - 1)
+        Integer offset = size * (page - 1);
+        List<Question> list = questionMapper.list(offset, size);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+
         for (Question question : list) {
             User user = userMapper.selectById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question,questionDTO);
+            BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        paginationDTO.setQuestions(questionDTOList);
+
+        return paginationDTO;
     }
 }
