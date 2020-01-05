@@ -28,24 +28,8 @@ public class PaginationDTO {
 
     private Integer totalPage;
 
-    public void set(Integer page, Integer size, Integer count) {
-
-
-        //判断当前应该有的页数
-        if (count % size == 0) {
-            totalPage = count / size;
-        } else {
-            totalPage = count / size + 1;
-        }
-
-        if (page < 1) {
-            page = 1;
-        }
-
-        if (page > totalPage) {
-            page = totalPage;
-        }
-
+    public void set(Integer totalPage, Integer page) {
+        this.totalPage = totalPage;
         this.page = page;
 
         //显示的页数
