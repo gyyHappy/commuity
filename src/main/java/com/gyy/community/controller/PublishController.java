@@ -62,6 +62,6 @@ public class PublishController {
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insert(question);
         }
-        return "publish";
+        return "index";
     }
 }
