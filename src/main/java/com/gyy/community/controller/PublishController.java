@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -52,30 +51,17 @@ public class PublishController {
             return "publish";
         }
 
-        User user = null;
-        //获取cookies
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (("token").equals(cookie.getName())){
-                    String token = cookie.getValue();
-                    //通过token查询数据库
-                    user = userMapper.selectByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
+        //获取用户的信息
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
+            //将信息放到前端
             model.addAttribute("error","用户未登录");
+        }else {
+            question.setCreator(user.getId());
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
         }
-
-        question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
-        questionMapper.insert(question);
         return "publish";
     }
 }

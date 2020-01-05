@@ -1,7 +1,6 @@
 package com.gyy.community.controller;
 
 import com.gyy.community.dto.PaginationDTO;
-import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.User;
 import com.gyy.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -21,8 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class ProfileController {
 
-    @Resource
-    UserMapper userMapper;
 
     @Resource
     QuestionService questionService;
@@ -33,22 +29,8 @@ public class ProfileController {
                           HttpServletRequest request,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
                           @RequestParam(name = "size", defaultValue = "2") Integer size) {
-        //登录判断
-        Cookie[] cookies = request.getCookies();
-        User user = null;
-        if (cookies != null && cookies.length != 0) {
-            for (Cookie cookie : cookies) {
-                if (("token").equals(cookie.getName())) {
-                    String token = cookie.getValue();
-                    //通过token查询数据库
-                    user = userMapper.selectByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        //获取用户的信息
+        User user = (User) request.getSession().getAttribute("user");
         //如果没有登录就重定向到首页
         if (user == null) {
             return "redirect:/";
