@@ -5,7 +5,9 @@ import com.gyy.community.dto.QuestionDTO;
 import com.gyy.community.mapper.QuestionMapper;
 import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.Question;
+import com.gyy.community.model.QuestionExample;
 import com.gyy.community.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,7 @@ public class QuestionService {
 
         //页面信息
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer count = questionMapper.count();
+        Integer count = (int) questionMapper.countByExample(new QuestionExample());
 
         Integer totalPage;
         //判断当前应该有的页数
@@ -52,14 +54,17 @@ public class QuestionService {
         if (page > totalPage) {
             page = totalPage;
         }
+
+
         paginationDTO.set(totalPage, page);
         // offset = size * (page - 1)
         Integer offset = size * (page - 1);
-        List<Question> list = questionMapper.list(offset, size);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
-        for (Question question : list) {
-            User user = userMapper.selectById(question.getCreator());
+
+        for (Question question : questions) {
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
@@ -73,7 +78,11 @@ public class QuestionService {
     public PaginationDTO listByUserId(int userId, Integer page, Integer size) {
         //页面信息
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer count = questionMapper.countByUserId(userId);
+
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andIdEqualTo(userId);
+        Integer count = (int) questionMapper.countByExample(questionExample);
 
         Integer totalPage;
         //判断当前应该有的页数
@@ -96,11 +105,14 @@ public class QuestionService {
         if (offset < 0) {
             offset = 0;
         }
-        List<Question> list = questionMapper.listByUserId(userId, offset, size);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria()
+                .andIdEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, page));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
-        for (Question question : list) {
-            User user = userMapper.selectById(question.getCreator());
+        for (Question question : questions) {
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
@@ -114,24 +126,24 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         //通过id查询问题信息
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
         //获取用户信息
-        User user = userMapper.selectById(question.getCreator());
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
-        BeanUtils.copyProperties(question,questionDTO);
+        BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
         return questionDTO;
     }
 
     public void createOrUpdate(Question question, User user) {
-        Question dbQuestion = questionMapper.getById(question.getId());
-        if (question.getId() != null && user.getId() == dbQuestion.getCreator()) {
+        Question dbQuestion = questionMapper.selectByPrimaryKey(question.getId());
+        if (question.getId() != null && user.getId().equals(dbQuestion.getCreator())) {
             //更新
             question.setCreator(dbQuestion.getCreator());
             question.setGmtCreate(dbQuestion.getGmtCreate());
             question.setGmtModified(System.currentTimeMillis());
-            questionMapper.update(question);
-        }else {
+            questionMapper.updateByPrimaryKey(question);
+        } else {
             //创建
             question.setCreator(user.getId());
             question.setGmtCreate(System.currentTimeMillis());

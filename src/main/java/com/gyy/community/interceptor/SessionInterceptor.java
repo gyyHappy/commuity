@@ -2,6 +2,7 @@ package com.gyy.community.interceptor;
 
 import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.User;
+import com.gyy.community.model.UserExample;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @author GYY
@@ -30,9 +32,12 @@ public class SessionInterceptor implements HandlerInterceptor {
                 if (("token").equals(cookie.getName())){
                     String token = cookie.getValue();
                     //通过token查询数据库
-                    User user = userMapper.selectByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
+                    UserExample userExample = new UserExample();
+                    userExample.createCriteria()
+                            .andTokenEqualTo(token);
+                    List<User> users = userMapper.selectByExample(userExample);
+                    if (users.size() > 0){
+                        request.getSession().setAttribute("user",users.get(0));
                     }
                     break;
                 }

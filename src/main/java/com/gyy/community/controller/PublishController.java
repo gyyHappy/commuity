@@ -2,8 +2,6 @@ package com.gyy.community.controller;
 
 import com.gyy.community.dto.QuestionDTO;
 import com.gyy.community.model.Question;
-import com.gyy.community.mapper.QuestionMapper;
-import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.User;
 import com.gyy.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
