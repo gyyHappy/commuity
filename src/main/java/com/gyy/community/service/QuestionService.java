@@ -29,8 +29,8 @@ public class QuestionService {
     /**
      * 查询问题信息列表
      *
-     * @param page
-     * @param size
+     * @param page 当前页
+     * @param size 每页显示的条数
      * @return 返回 QuestionDTO
      */
     public PaginationDTO list(Integer page, Integer size) {
@@ -121,5 +121,22 @@ public class QuestionService {
         BeanUtils.copyProperties(question,questionDTO);
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+    public void createOrUpdate(Question question, User user) {
+        Question dbQuestion = questionMapper.getById(question.getId());
+        if (question.getId() != null && user.getId() == dbQuestion.getCreator()) {
+            //更新
+            question.setCreator(dbQuestion.getCreator());
+            question.setGmtCreate(dbQuestion.getGmtCreate());
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+        }else {
+            //创建
+            question.setCreator(user.getId());
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
+        }
     }
 }
