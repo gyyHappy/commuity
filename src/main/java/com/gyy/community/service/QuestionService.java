@@ -2,11 +2,14 @@ package com.gyy.community.service;
 
 import com.gyy.community.dto.PaginationDTO;
 import com.gyy.community.dto.QuestionDTO;
+import com.gyy.community.exception.CustomizeErrorCode;
+import com.gyy.community.exception.CustomizeException;
 import com.gyy.community.mapper.QuestionMapper;
 import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.Question;
 import com.gyy.community.model.QuestionExample;
 import com.gyy.community.model.User;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -127,6 +130,9 @@ public class QuestionService {
     public QuestionDTO getById(Integer id) {
         //通过id查询问题信息
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         //获取用户信息
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
@@ -142,7 +148,10 @@ public class QuestionService {
             question.setCreator(dbQuestion.getCreator());
             question.setGmtCreate(dbQuestion.getGmtCreate());
             question.setGmtModified(System.currentTimeMillis());
-            questionMapper.updateByPrimaryKey(question);
+            int i = questionMapper.updateByPrimaryKey(question);
+            if (i != 1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         } else {
             //创建
             question.setCreator(user.getId());
