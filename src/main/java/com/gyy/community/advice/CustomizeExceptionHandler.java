@@ -1,8 +1,6 @@
 package com.gyy.community.advice;
 
 import com.gyy.community.exception.CustomizeException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

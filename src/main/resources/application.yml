@@ -11,7 +11,7 @@ github:
 # mysql 数据库
 spring:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/coummity?serverTimezone=UTC
     username: root
     password: 123456

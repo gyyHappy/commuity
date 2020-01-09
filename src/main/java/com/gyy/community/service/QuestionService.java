@@ -4,12 +4,12 @@ import com.gyy.community.dto.PaginationDTO;
 import com.gyy.community.dto.QuestionDTO;
 import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.exception.CustomizeException;
+import com.gyy.community.mapper.QuestionExtMapper;
 import com.gyy.community.mapper.QuestionMapper;
 import com.gyy.community.mapper.UserMapper;
 import com.gyy.community.model.Question;
 import com.gyy.community.model.QuestionExample;
 import com.gyy.community.model.User;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,9 @@ public class QuestionService {
 
     @Resource
     UserMapper userMapper;
+
+    @Resource
+    QuestionExtMapper questionExtMapper;
 
     /**
      * 查询问题信息列表
@@ -159,5 +162,12 @@ public class QuestionService {
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insert(question);
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
