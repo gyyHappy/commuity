@@ -7,4 +7,6 @@ package com.gyy.community.exception;
 public interface ICustomizeErrorCode {
 
     String getMessage();
+
+    Integer getCode();
 }
