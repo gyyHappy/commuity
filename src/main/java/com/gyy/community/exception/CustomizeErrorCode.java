@@ -15,7 +15,11 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode{
 
     NO_LOGIN(2003,"未登录，请先登录"),
 
-    SYS_ERROR(2004,"服务器冒烟了，要不你访问别的吧！");
+    SYS_ERROR(2004,"服务器冒烟了，要不你访问别的吧！"),
+
+    TYPE_PARAM_WRONG(2005,"评论类型错误或者不存在"),
+
+    COMMENT_NOT_FOUND(2006,"你回复的评论不存在了，要不换个试试？");
 
     @Override
     public String getMessage() {

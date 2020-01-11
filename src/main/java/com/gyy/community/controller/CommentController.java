@@ -32,15 +32,15 @@ public class CommentController {
     @ResponseBody
     public Object post(@RequestBody CommentDTO commentDTO,
                        HttpServletRequest request){
-        User user = (User) request.getSession().getAttribute("user");
-        if (user == null){
-            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
-        }
+//        User user = (User) request.getSession().getAttribute("user");
+//        if (user == null){
+//            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+//        }
         Comment comment = new Comment();
         comment.setParentId(commentDTO.getParentId());
         comment.setContent(commentDTO.getContent());
         comment.setType(commentDTO.getType());
-        comment.setCommentator(user.getId());
+        comment.setCommentator(1L);
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setLikeCount(0L);

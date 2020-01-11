@@ -16,8 +16,16 @@
   <update id="incView" parameterType="com.gyy.community.model.Question">
     update question
         set
-            view_count = view_count + #{record.viewCount,jdbcType=INTEGER}
+            view_count = view_count + #{viewCount}
         where
-            id = #{record.id,jdbcType=INTEGER}
+            id = #{id}
   </update>
+
+    <update id="incCommentCount" parameterType="com.gyy.community.model.Question">
+        update question
+        set
+            comment_count = comment_count + #{commentCount}
+        where
+            id = #{id}
+    </update>
 </mapper>
