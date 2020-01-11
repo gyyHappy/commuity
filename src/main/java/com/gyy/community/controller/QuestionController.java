@@ -21,11 +21,11 @@ public class QuestionController {
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id")Long id,
-                           Model model){
+                           Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
         //增加阅读数
         questionService.incView(id);
-        model.addAttribute("question",questionDTO);
+        model.addAttribute("question", questionDTO);
         return "question";
     }
 }

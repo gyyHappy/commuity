@@ -9,6 +9,7 @@ import com.gyy.community.mapper.QuestionMapper;
 import com.gyy.community.model.Comment;
 import com.gyy.community.model.Question;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -28,6 +29,7 @@ public class CommentService {
     @Resource
     private QuestionExtMapper questionExtMapper;
 
+    @Transactional(rollbackFor = Exception.class)
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);

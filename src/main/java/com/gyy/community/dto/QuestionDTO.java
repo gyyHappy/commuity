@@ -13,7 +13,7 @@ public class QuestionDTO {
     /**
      * id
      */
-    private Integer id;
+    private Long id;
     /**
      * 标题
      */
@@ -33,7 +33,7 @@ public class QuestionDTO {
     /**
      * 创建者id
      */
-    private Integer creator;
+    private Long creator;
     /**
      * 评论数
      */

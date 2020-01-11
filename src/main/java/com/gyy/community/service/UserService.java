@@ -26,7 +26,7 @@ public class UserService {
         //通过accountId查询老的用户信息
         List<User> users = userMapper.selectByExample(userExample);
         //新用户则添加到数据库中
-        if (users.size() > 0) {
+        if (users.size() < 0) {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
