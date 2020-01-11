@@ -11,10 +11,18 @@ function post() {
             "type":1
         }),
         success: function (response) {
-            if (response.code == 200){
-                $("#comment_section").hidden();
+            if (response.code === 200){
+                $("#comment_section").hide();
             }else {
-                alert(response.message());
+                if (response.code === 2003) {
+                    var isAccepted = confirm(response.message);
+                    if (isAccepted){
+                        window.open("https://github.com/login/oauth/authorize?client_id=14ce1bdacd596e4269ba&redirect_uri=http://localhost:8080/callback&scope=user&state=1");
+                        window.localStorage.setItem("closable",true);
+                    }
+                } else {
+                    alert(response.message());
+                }
             }
         },
         dataType: "json"
