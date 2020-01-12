@@ -163,6 +163,9 @@ public class QuestionService {
             question.setCreator(user.getId());
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setLikeCount(0);
+            question.setCommentCount(0);
+            question.setViewCount(0);
             questionMapper.insert(question);
         }
     }
