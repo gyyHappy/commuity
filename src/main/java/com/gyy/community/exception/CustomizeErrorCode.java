@@ -19,7 +19,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode{
 
     TYPE_PARAM_WRONG(2005,"评论类型错误或者不存在"),
 
-    COMMENT_NOT_FOUND(2006,"你回复的评论不存在了，要不换个试试？");
+    COMMENT_NOT_FOUND(2006,"你回复的评论不存在了，要不换个试试？"),
+
+    COMMENT_IS_EMPTY(2007,"评论不能为空");
 
     @Override
     public String getMessage() {

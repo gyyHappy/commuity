@@ -6,6 +6,7 @@ import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.model.Comment;
 import com.gyy.community.model.User;
 import com.gyy.community.service.CommentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,10 @@ public class CommentController {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null){
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+        }
+        //判断评论内容是否为空或空串
+        if (StringUtils.isBlank(commentCreateDTO.getContent())){
+            return ResultDTO.errorOf(CustomizeErrorCode.COMMENT_IS_EMPTY);
         }
         Comment comment = new Comment();
         comment.setParentId(commentCreateDTO.getParentId());

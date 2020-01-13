@@ -39,6 +39,7 @@ public class CommentService {
     @Resource
     private UserMapper userMapper;
 
+    //评论
     @Transactional(rollbackFor = Exception.class)
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0){
@@ -66,11 +67,13 @@ public class CommentService {
         }
     }
 
+    //获取评论列表
     public List<CommentDTO> listByQuestionId(Long id) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
                 .andTypeEqualTo(CommentEnum.QUESTION.getType());
+        commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 
         if (comments.size() == 0){
