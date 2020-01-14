@@ -2,6 +2,7 @@ package com.gyy.community.controller;
 
 import com.gyy.community.dto.CommentDTO;
 import com.gyy.community.dto.QuestionDTO;
+import com.gyy.community.enums.CommentEnum;
 import com.gyy.community.service.CommentService;
 import com.gyy.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
@@ -30,10 +31,10 @@ public class QuestionController {
                            Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
         //查询回复列表
-        List<CommentDTO> commentDTOList = commentService.listByQuestionId(id);
+        List<CommentDTO> commentDTOList = commentService.listByTargetId(id, CommentEnum.QUESTION);
         //增加阅读数
         questionService.incView(id);
-        model.addAttribute("commentList",commentDTOList);
+        model.addAttribute("comments",commentDTOList);
         model.addAttribute("question", questionDTO);
         return "question";
     }

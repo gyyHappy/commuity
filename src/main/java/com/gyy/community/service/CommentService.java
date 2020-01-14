@@ -4,14 +4,12 @@ import com.gyy.community.dto.CommentDTO;
 import com.gyy.community.enums.CommentEnum;
 import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.exception.CustomizeException;
-import com.gyy.community.mapper.CommentMapper;
-import com.gyy.community.mapper.QuestionExtMapper;
-import com.gyy.community.mapper.QuestionMapper;
-import com.gyy.community.mapper.UserMapper;
+import com.gyy.community.mapper.*;
 import com.gyy.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -39,6 +37,9 @@ public class CommentService {
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private CommentExtMapper commentExtMapper;
+
     //评论
     @Transactional(rollbackFor = Exception.class)
     public void insert(Comment comment) {
@@ -55,6 +56,12 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+
+            //增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
         }else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -68,11 +75,11 @@ public class CommentService {
     }
 
     //获取评论列表
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 

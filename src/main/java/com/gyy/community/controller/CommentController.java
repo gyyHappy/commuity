@@ -1,19 +1,20 @@
 package com.gyy.community.controller;
 
 import com.gyy.community.dto.CommentCreateDTO;
+import com.gyy.community.dto.CommentDTO;
 import com.gyy.community.dto.ResultDTO;
+import com.gyy.community.enums.CommentEnum;
 import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.model.Comment;
 import com.gyy.community.model.User;
 import com.gyy.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author GYY
@@ -26,6 +27,12 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
+    /**
+     * 提交评论
+     * @param commentCreateDTO commentCreateDTO
+     * @param request request
+     * @return ResultDTO
+     */
     @PostMapping("/comment")
     @ResponseBody
     public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
@@ -48,5 +55,12 @@ public class CommentController {
         comment.setLikeCount(0L);
         commentService.insert(comment);
         return ResultDTO.okOf();
+    }
+
+    @GetMapping("/comment/{id}")
+    @ResponseBody
+    public ResultDTO<List<CommentDTO>> comment(@PathVariable(name = "id") Long id){
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(id, CommentEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
     }
 }
