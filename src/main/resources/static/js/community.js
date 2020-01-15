@@ -4,12 +4,14 @@ function post() {
     var content = $("#comment_content").val();
     comment2target(questionId, 1, content);
 }
+
 //2级评论的提交
 function comment(e) {
     var commentId = e.getAttribute("data-id");
     var content = $("#input-" + commentId).val();
     comment2target(commentId, 2, content);
 }
+
 
 function comment2target(targetId, type, content) {
     if (!content) {

@@ -3,7 +3,7 @@
 github:
   client:
     id: 14ce1bdacd596e4269ba
-    secret: 528abafa3f2b352dcb7a7dd1a1f1961d5d834f7b
+    secret: e03314acd3a2dbedc9d6d9f5a86ecb7a9cf2fa39
   redirect:
     uri: http://localhost:8080/callback
 
