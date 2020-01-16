@@ -1,9 +1,11 @@
 package com.gyy.community.controller;
 
+import com.gyy.community.cache.TagCache;
 import com.gyy.community.dto.QuestionDTO;
 import com.gyy.community.model.Question;
 import com.gyy.community.model.User;
 import com.gyy.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +27,8 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -37,6 +40,7 @@ public class PublishController {
         model.addAttribute("title", question.getTitle());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
+        model.addAttribute("tags", TagCache.get());
 
         if (question.getTitle() == null || "".equals(question.getTitle())) {
             model.addAttribute("error", "标题不能为空");
@@ -48,6 +52,11 @@ public class PublishController {
         }
         if (question.getDescription() == null || "".equals(question.getDescription())) {
             model.addAttribute("error", "内容不能为空");
+            return "publish";
+        }
+        String invalid = TagCache.filterInvalid(question.getTag());
+        if (StringUtils.isNotBlank(invalid)){
+            model.addAttribute("error", "输入非法标签" + invalid);
             return "publish";
         }
 
@@ -71,6 +80,7 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id",question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 }
