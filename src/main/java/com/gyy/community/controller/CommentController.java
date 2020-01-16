@@ -5,6 +5,7 @@ import com.gyy.community.dto.CommentDTO;
 import com.gyy.community.dto.ResultDTO;
 import com.gyy.community.enums.CommentEnum;
 import com.gyy.community.exception.CustomizeErrorCode;
+import com.gyy.community.mapper.NotificationMapper;
 import com.gyy.community.model.Comment;
 import com.gyy.community.model.User;
 import com.gyy.community.service.CommentService;
@@ -26,6 +27,8 @@ public class CommentController {
 
     @Resource
     private CommentService commentService;
+
+
 
     /**
      * 提交评论
