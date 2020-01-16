@@ -86,21 +86,21 @@ public class QuestionService {
     }
 
     public PaginationDTO listByUserId(Long userId, Integer page, Integer size) {
-        //页面信息
         PaginationDTO paginationDTO = new PaginationDTO();
+
+        Integer totalPage;
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
-                .andIdEqualTo(userId);
-        Integer count = (int) questionMapper.countByExample(questionExample);
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
-        Integer totalPage;
-        //判断当前应该有的页数
-        if (count % size == 0) {
-            totalPage = count / size;
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
         } else {
-            totalPage = count / size + 1;
+            totalPage = totalCount / size + 1;
         }
+
         if (page < 1) {
             page = 1;
         }
@@ -110,15 +110,12 @@ public class QuestionService {
 
         paginationDTO.set(totalPage, page);
 
-        // offset = size * (page - 1)
+        //size*(page-1)
         Integer offset = size * (page - 1);
-        if (offset < 0) {
-            offset = 0;
-        }
         QuestionExample example = new QuestionExample();
         example.createCriteria()
-                .andIdEqualTo(userId);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, page));
+                .andCreatorEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
         for (Question question : questions) {
@@ -128,8 +125,8 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        paginationDTO.setQuestions(questionDTOList);
 
+        paginationDTO.setQuestions(questionDTOList);
         return paginationDTO;
     }
 
@@ -159,7 +156,7 @@ public class QuestionService {
             question.setCommentCount(0);
             question.setLikeCount(0);
             int i = questionMapper.updateByPrimaryKey(question);
-            if (i != 1){
+            if (i != 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         } else {
@@ -182,10 +179,10 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO questionDTO) {
-        if (StringUtils.isBlank(questionDTO.getTag())){
+        if (StringUtils.isBlank(questionDTO.getTag())) {
             return new ArrayList<>();
         }
-        String regexpTag = questionDTO.getTag().replace(",","|");
+        String regexpTag = questionDTO.getTag().replace(",", "|");
         Question question = new Question();
         question.setId(questionDTO.getId());
         question.setTag(regexpTag);
