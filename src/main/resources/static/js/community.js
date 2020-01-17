@@ -8,6 +8,7 @@ function post() {
 //2级评论的提交
 function comment(e) {
     var commentId = e.getAttribute("data-id");
+    console.log(commentId);
     var content = $("#input-" + commentId).val();
     comment2target(commentId, 2, content);
 }
@@ -38,7 +39,7 @@ function comment2target(targetId, type, content) {
                         window.localStorage.setItem("closable", true);
                     }
                 } else {
-                    alert(response.message());
+                    alert(response.message);
                 }
             }
         },

@@ -8,7 +8,6 @@ import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.exception.CustomizeException;
 import com.gyy.community.mapper.*;
 import com.gyy.community.model.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,22 +46,29 @@ public class CommentService {
 
     /**
      * 评论
-     * @param comment 评论
+     *
+     * @param comment     评论
+     * @param commentator
      */
     @Transactional(rollbackFor = Exception.class)
-    public void insert(Comment comment) {
-        if (comment.getParentId() == null || comment.getParentId() == 0){
+    public void insert(Comment comment, User commentator) {
+        if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
-        if(comment.getType() == null || !CommentEnum.isExit(comment.getType())){
-            throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
+        if (comment.getType() == null || !CommentEnum.isExit(comment.getType())) {
+            throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
-        if (comment.getType().equals(CommentEnum.COMMENT.getType())){
+        if (comment.getType().equals(CommentEnum.COMMENT.getType())) {
             //回复评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
+            }
+            comment.setCommentCount(0);
             commentMapper.insert(comment);
 
             //增加评论数
@@ -71,40 +77,47 @@ public class CommentService {
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
             //创建通知
-            createNotify(dbComment.getCommentator(),comment,NotificationTypeEnum.REPLY_QUESTION);
-        }else {
+            createNotify(dbComment.getCommentator(), comment, commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT, question.getId());
+        } else {
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            comment.setCommentCount(0);
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
             //创建通知
-            createNotify(question.getCreator(),comment,NotificationTypeEnum.REPLY_COMMENT);
+            createNotify(question.getCreator(), comment, commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_QUESTION, question.getId());
         }
     }
 
     /**
      * 创建通知
+     *
      * @param receiver
      * @param comment
+     * @param notifierName
+     * @param outerTitle
      */
-    private void createNotify(Long receiver, Comment comment ,NotificationTypeEnum notificationTypeEnum) {
+    private void createNotify(Long receiver, Comment comment, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum, Long outerId) {
         Notification notification = new Notification();
         notification.setGmtCreate(System.currentTimeMillis());
         notification.setType(notificationTypeEnum.getType());
-        notification.setOuterid(comment.getParentId());
+        notification.setOuterId(outerId);
         notification.setNotifier(comment.getCommentator());
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
         notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
         notificationMapper.insert(notification);
     }
 
     /**
      * 获取评论列表
-     * @param id id
+     *
+     * @param id   id
      * @param type type
      * @return commentDTOS
      */
@@ -116,7 +129,7 @@ public class CommentService {
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 
-        if (comments.size() == 0){
+        if (comments.size() == 0) {
             return new ArrayList<>();
         }
         //获取去重评论人
