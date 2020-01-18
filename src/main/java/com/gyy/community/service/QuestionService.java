@@ -155,8 +155,11 @@ public class QuestionService {
             question.setViewCount(0);
             question.setCommentCount(0);
             question.setLikeCount(0);
-            int i = questionMapper.updateByPrimaryKey(question);
-            if (i != 1) {
+            QuestionExample example = new QuestionExample();
+            example.createCriteria()
+                    .andIdEqualTo(question.getId());
+            int updated = questionMapper.updateByExampleSelective(question, example);
+            if (updated != 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         } else {
