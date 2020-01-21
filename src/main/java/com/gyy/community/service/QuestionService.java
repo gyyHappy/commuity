@@ -2,6 +2,7 @@ package com.gyy.community.service;
 
 import com.gyy.community.dto.PaginationDTO;
 import com.gyy.community.dto.QuestionDTO;
+import com.gyy.community.dto.QuestionQueryDTO;
 import com.gyy.community.exception.CustomizeErrorCode;
 import com.gyy.community.exception.CustomizeException;
 import com.gyy.community.mapper.QuestionExtMapper;
@@ -43,11 +44,17 @@ public class QuestionService {
      * @param size 每页显示的条数
      * @return 返回 QuestionDTO
      */
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search,Integer page, Integer size) {
+
+        if (StringUtils.isNotBlank(search)) {
+            search = search.replace(" ", "|");
+        }
 
         //页面信息
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer count = (int) questionMapper.countByExample(new QuestionExample());
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer count = questionExtMapper.countBySearch(questionQueryDTO);
 
         Integer totalPage;
         //判断当前应该有的页数
@@ -69,7 +76,9 @@ public class QuestionService {
         Integer offset = size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset, size));
+        questionQueryDTO.setPage(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
 
 

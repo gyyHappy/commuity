@@ -3,9 +3,9 @@
 github:
   client:
     id: 14ce1bdacd596e4269ba
-    secret: ffbff41c4a3e8f01db06c2785988e9bbfeb634ef
+    secret: 6bf31ab8210472bfe8e9f85b121563895a745ec8
   redirect:
-    uri: http://localhost:8080/callback
+    uri: http://localhost:8887/callback
 
 
 # mysql 数据库
@@ -25,3 +25,18 @@ mybatis:
   type-aliases-package: com.gyy.community.mapper
   mapper-locations: classpath:mapper/*.xml
 
+#  启动端口
+server:
+  port: 8887
+
+# 日志
+logging:
+  file:
+    max-size: 1KB
+    path: logs
+  level:
+    root: info
+    com:
+      gyy:
+        community:
+          mapper: debug
